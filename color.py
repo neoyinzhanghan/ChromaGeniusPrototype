@@ -105,9 +105,7 @@ class Color:
     def __str__(self) -> str:
         if self.name is None:
             parents = self.parents
-            recipe_str = ", ".join(
-                [f"{parent[0].name}: {parent[1]}" for parent in parents]
-            )
+            recipe_str = ", ".join([f"{parent[0].name}" for parent in parents])
             return f"Mixed Color: {self.rgb}, Recipe: {recipe_str}."
         else:
             return f"{self.name}: {self.rgb}"
@@ -172,44 +170,53 @@ color_palette = ColorPalette(
 )
 
 
-def visualize_palette(color_palette, filename='color_palette.png'):
+def visualize_palette(color_palette, filename="color_palette.png"):
     # Extract the colors and their names from the dictionary
     colors = list(color_palette.rgb_to_color.keys())
     color_names = list(color_palette.rgb_to_color.values())
-    
+
     # Determine the number of columns for the visualization
     num_colors = len(colors)
     num_cols = 10  # Set the number of columns
     num_rows = int(np.ceil(num_colors / num_cols))
-    
+
     # Create a figure and axes
     fig, ax = plt.subplots(figsize=(num_cols, num_rows))
-    
+
     # Hide the axes
     ax.set_axis_off()
-    
+
     # Plot each color as a rectangle
     for i, color in enumerate(colors):
         row = i // num_cols
         col = i % num_cols
         color_hex = "#{:02x}{:02x}{:02x}".format(*color)
-        
+
         # Draw the rectangle with the color
         rect = plt.Rectangle((col, num_rows - row - 1), 1, 1, color=color_hex)
         ax.add_patch(rect)
-        
+
         # Add the color name as text
-        ax.text(col + 0.5, num_rows - row - 1.5, color_names[i], ha='center', va='center', fontsize=8, color='black')
-    
+        ax.text(
+            col + 0.5,
+            num_rows - row - 1.5,
+            color_names[i],
+            ha="center",
+            va="center",
+            fontsize=8,
+            color="black",
+        )
+
     # Set the limits and aspect ratio
     ax.set_xlim(0, num_cols)
     ax.set_ylim(0, num_rows)
-    ax.set_aspect('equal')
-    
+    ax.set_aspect("equal")
+
     # Save the plot as an image file
     plt.tight_layout()
     plt.savefig(filename)
     plt.close()
+
 
 # Example usage:
 visualize_palette(color_palette)

@@ -7,12 +7,13 @@ from streamlit_drawable_canvas import st_canvas
 import matplotlib.pyplot as plt
 from io import BytesIO
 
+
 def visualize_palette(color_palette):
     colors = list(color_palette.rgb_to_color.keys())
     num_colors = len(colors)
     num_cols = 10
     num_rows = int(np.ceil(num_colors / num_cols))
-    
+
     fig, ax = plt.subplots(figsize=(num_cols, num_rows))
     ax.set_axis_off()
 
@@ -22,27 +23,27 @@ def visualize_palette(color_palette):
         color_hex = "#{:02x}{:02x}{:02x}".format(*color)
         rect = plt.Rectangle((col, num_rows - row - 1), 1, 1, color=color_hex)
         ax.add_patch(rect)
-    
+
     ax.set_xlim(0, num_cols)
     ax.set_ylim(0, num_rows)
-    ax.set_aspect('equal')
-    
+    ax.set_aspect("equal")
+
     buf = BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0)
+    plt.savefig(buf, format="png", bbox_inches="tight", pad_inches=0)
     plt.close(fig)
     buf.seek(0)
-    
+
     return buf
 
+
 # Streamlit app
-st.title("🎨 Color Palette Search")
+st.title("🎨 ChromaGenius Paint Mixer")
 
 st.write(
     """
 Welcome to the Color Palette Search App! 
 Select the colors you want to include in your palette from the list below. 
-Then, use the color picker to choose your desired color, and click 'Submit' to find the closest matching color in your palette. 
-The input color and the matched color will be displayed side by side.
+Then, use the color picker to choose your desired color from a reference image, and click 'Submit' to find the closest matching color in your palette and the recipe to mix the color with your available colors.
 """
 )
 
@@ -134,8 +135,13 @@ if st.session_state["palette_submitted"] and "palette_image" in st.session_state
     st.write("### Color Palette Visualization")
     with st.container():
         st.markdown('<div class="scrollable-container">', unsafe_allow_html=True)
-        st.image(st.session_state["palette_image"], caption="Color Palette", use_column_width=True, clamp=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.image(
+            st.session_state["palette_image"],
+            caption="Color Palette",
+            use_column_width=True,
+            clamp=True,
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
 
 if st.session_state["palette_submitted"]:
     st.write("###")
@@ -254,4 +260,6 @@ if st.session_state["palette_submitted"]:
 
     else:
         st.write("###")
-        st.write("Use the color picker above to choose a color and click 'Submit Color'.")
+        st.write(
+            "Use the color picker above to choose a color and click 'Submit Color'."
+        )
